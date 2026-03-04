@@ -26,16 +26,21 @@ body {
     100% { background-position: 0% 50%; }
 }
 
+/* GLASS EFFECT FOR READABILITY */
 .container {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     width: 85%;
+    background: rgba(0, 0, 0, 0.35);
+    padding: 30px;
+    border-radius: 20px;
+    backdrop-filter: blur(8px);
 }
 
 .name {
-    font-size: 3.5rem;
+    font-size: 3rem;
     font-weight: 800;
     animation: glow 2s ease-in-out infinite alternate;
 }
@@ -46,23 +51,22 @@ body {
 }
 
 h2 {
-    margin-top: 10px;
     font-weight: 300;
 }
 
 #typedText {
-    font-size: 1.1rem;
-    margin-top: 20px;
-    min-height: 150px;
+    font-size: 1rem;
+    margin-top: 15px;
+    min-height: 140px;
     white-space: pre-line;
 }
 
 button {
-    margin-top: 20px;
-    padding: 12px 25px;
+    margin-top: 15px;
+    padding: 10px 20px;
     border: none;
-    border-radius: 30px;
-    font-size: 1rem;
+    border-radius: 25px;
+    font-size: 0.9rem;
     cursor: pointer;
     background: white;
     color: #ff1493;
@@ -75,28 +79,16 @@ button:hover {
     background: #ffe6f2;
 }
 
-.hidden-message {
-    margin-top: 20px;
-    font-size: 1rem;
+.hidden-message, .wish {
+    margin-top: 15px;
     display: none;
+    font-size: 0.95rem;
     animation: fadeIn 1.5s ease forwards;
 }
 
 @keyframes fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
-}
-
-.wish {
-    margin-top: 15px;
-    font-size: 1.2rem;
-    display: none;
-    animation: glowWish 1.5s ease infinite alternate;
-}
-
-@keyframes glowWish {
-    from { text-shadow: 0 0 10px white; }
-    to { text-shadow: 0 0 25px #fff; }
 }
 
 .heart {
@@ -123,18 +115,19 @@ canvas {
 <canvas id="fireworks"></canvas>
 
 <div class="container">
-    <div class="name">ANNASTACIA 🎂</div>
+    <div class="name">ANNASTACIA🎂</div>
     <h2>Happy 22nd Birthday ✨</h2>
     <div id="typedText"></div>
 
     <button onclick="showWish()">Make a Wish ✨</button>
-    <div class="wish" id="wishText">Close your eyes, smile, and make the biggest wish for this new year 🌟</div>
+    <div class="wish" id="wishText">
+        Close your eyes, smile, and make the biggest wish for this new year 🌟
+    </div>
 
     <button onclick="revealMessage()">Click for a Surprise 💌</button>
     <div class="hidden-message" id="hiddenMessage">
-        No matter where life takes you this year,  
-        I genuinely hope it leads you to happiness, success, growth, and beautiful memories.  
-        Keep becoming the amazing person you are meant to be.
+        No matter where life takes you this year,
+        I genuinely hope it leads you to happiness, growth, success, and unforgettable memories.
     </div>
 </div>
 
@@ -142,19 +135,15 @@ canvas {
 // CHANGE HER NAME HERE
 const herName = "ANNASTACIA";
 
-// Typing Message
 const message = `It’s officially 12:00 🕛✨
 
 Happy 22nd Birthday, ${herName}.
 
-As you step into 22, I hope this year brings you clarity, confidence, growth, and success in everything you do.
+As you step into 22, I hope this year brings you clarity, confidence, growth, and success.
 
 May doors open for you.
 May your efforts turn into results.
-May your dreams slowly become achievements.
-
-Keep aiming higher.
-Keep believing in yourself.
+May your dreams become achievements.
 
 Welcome to 22 🌟`;
 
@@ -174,24 +163,22 @@ function createHeart() {
     heart.classList.add("heart");
     heart.innerHTML = "💖";
     heart.style.left = Math.random() * 100 + "vw";
-    heart.style.fontSize = (Math.random() * 25 + 15) + "px";
+    heart.style.fontSize = (Math.random() * 20 + 15) + "px";
     heart.style.animationDuration = (Math.random() * 5 + 5) + "s";
     document.body.appendChild(heart);
     setTimeout(() => heart.remove(), 8000);
 }
 setInterval(createHeart, 300);
 
-// Show Wish
+// Wish + Surprise
 function showWish() {
     document.getElementById("wishText").style.display = "block";
 }
-
-// Reveal Hidden Message
 function revealMessage() {
     document.getElementById("hiddenMessage").style.display = "block";
 }
 
-// Fireworks
+// COLORFUL FIREWORKS
 const canvas = document.getElementById("fireworks");
 const ctx = canvas.getContext("2d");
 canvas.width = window.innerWidth;
@@ -202,20 +189,23 @@ let particles = [];
 function createFirework() {
     let x = Math.random() * canvas.width;
     let y = Math.random() * canvas.height / 2;
-    for (let i = 0; i < 60; i++) {
+    let colors = ["#ff4d6d", "#ff85a1", "#ffd6e0", "#ffffff"];
+    let color = colors[Math.floor(Math.random() * colors.length)];
+
+    for (let i = 0; i < 50; i++) {
         particles.push({
             x: x,
             y: y,
             angle: Math.random() * 2 * Math.PI,
             speed: Math.random() * 4 + 2,
-            radius: 2
+            radius: 3,
+            color: color
         });
     }
 }
 
 function animate() {
-    ctx.fillStyle = "rgba(0,0,0,0.1)";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     particles.forEach((p, index) => {
         p.x += Math.cos(p.angle) * p.speed;
@@ -224,7 +214,7 @@ function animate() {
 
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-        ctx.fillStyle = "white";
+        ctx.fillStyle = p.color;
         ctx.fill();
 
         if (p.radius < 0.5) {
